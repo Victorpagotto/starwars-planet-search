@@ -5,7 +5,44 @@ import TableRow from './TableRow';
 function Table() {
   const { context } = useContext(PlanetContext);
   const { data } = context;
-  const { filterByName, filterByNumericValues } = context;
+  const { filterByName, filterByNumericValues, order: { column, sort } } = context;
+  const orderRouter = (a, b) => {
+    console.log(`${a} e ${b}`);
+    const parsedA = parseInt(a, 10);
+    const parsedB = parseInt(b, 10);
+    if (sort === 'ASC') return parsedA - parsedB;
+    return parsedB - parsedA;
+  };
+
+  const bubbleDownUnknowns = (arr) => {
+    const arrCopy = [...arr];
+    for (let i = 0; i < arr.length; i += 1) {
+      for (let c = 0; c < arr.length - i - 1; c += 1) {
+        if (arrCopy[c][column] === 'unknown') {
+          const aux = arrCopy[c + 1][column];
+          arrCopy[c + 1][column] = arrCopy[c][column];
+          arrCopy[c][column] = aux;
+        }
+      }
+    }
+    return arrCopy;
+  };
+
+  const sortPlanets = (planetList) => {
+    let sortedList = [...planetList];
+    sortedList = bubbleDownUnknowns(sortedList);
+    if (sort !== 'ALP') {
+      sortedList = sortedList.sort((a, b) => orderRouter(a[column], b[column]));
+    } else {
+      const MINUS = -1;
+      sortedList = sortedList.sort((a, b) => {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return MINUS;
+        return 0;
+      });
+    }
+    return sortedList;
+  };
 
   // const formatKey = (key) => {
   //   const keyArray = key.split('_');
@@ -58,7 +95,7 @@ function Table() {
   const renderFilter = () => {
     let filteredWorlds = wordFilter(data);
     filteredWorlds = numericFilter(filteredWorlds);
-    return filteredWorlds;
+    return sortPlanets(filteredWorlds);
   };
 
   return (
@@ -72,12 +109,13 @@ function Table() {
             }
           </tr>
           {
-            renderFilter().map((planet, i) => (
-              <TableRow
-                key={ `${planet.name}-${i}` }
-                planetData={ Object.values(planet) }
-              />
-            ))
+            renderFilter()
+              .map((planet, i) => (
+                <TableRow
+                  key={ `${planet.name}-${i}` }
+                  planetData={ Object.entries(planet) }
+                />
+              ))
           }
         </tbody>
       </table>

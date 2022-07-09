@@ -6,13 +6,23 @@ export default function TableRow({ planetData }) {
     <tr className="info-row">
       {
         planetData.map((data, i) => {
-          if (typeof data === 'string') {
-            return <td key={ `${data}-${i}` }>{ data }</td>;
+          if (typeof data[1] === 'string') {
+            if (data[0] !== 'name') {
+              return <td key={ `${data[1]}-${i}` }>{ data[1] }</td>;
+            }
+            return (
+              <td
+                key={ `${data[1]}-${i}` }
+                data-testid="planet-name"
+              >
+                { data[1] }
+              </td>
+            );
           }
           return (
             <td key={ `info-array-index-${i}` }>
               {
-                data.map((item, index) => <p key={ `${item}-${index}` }>{ item }</p>)
+                data[1].map((item, index) => <p key={ `${item}-${index}` }>{ item }</p>)
               }
             </td>
           );

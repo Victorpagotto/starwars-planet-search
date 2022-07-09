@@ -49,6 +49,7 @@ function Header() {
       </div>
       <div>
         <label htmlFor="columnSelector">
+          Coluna
           <select
             id="columnSelector"
             value={ columnSelector }
@@ -63,6 +64,7 @@ function Header() {
           </select>
         </label>
         <label htmlFor="comparisonSelector">
+          Comparador
           <select
             id="comparisonSelector"
             value={ comparisonSelector }
@@ -75,6 +77,7 @@ function Header() {
           </select>
         </label>
         <label htmlFor="numericFilter" className="numeric-filter-label">
+          Valor
           <input
             id="numericFilter"
             type="number"

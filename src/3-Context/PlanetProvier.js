@@ -1,12 +1,11 @@
 import React, { createContext, useState } from 'react';
 import propTypes from 'prop-types';
+import columnList from '../0-Services/columnList';
 
 export const PlanetContext = createContext();
 
 export default function PlanetProvider({ children }) {
   const filterControl = (filterList) => {
-    const columnList = ['population', 'orbital_period',
-      'diameter', 'rotation_period', 'surface_water'];
     const selectedFilters = filterList
       .map((filter) => Object.values(filter)[0]);
     return columnList.filter((item) => !selectedFilters
@@ -23,6 +22,10 @@ export default function PlanetProvider({ children }) {
     comparisonSelector: 'maior que',
     filterByNumericValues: [],
     showFilter: filterControl([]),
+    order: {
+      column: 'population',
+      sort: 'ALP',
+    },
   };
 
   const [context, setContext] = useState(initialContext);
