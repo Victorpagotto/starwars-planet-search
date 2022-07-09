@@ -7,7 +7,6 @@ function Table() {
   const { data } = context;
   const { filterByName, filterByNumericValues, order: { column, sort } } = context;
   const orderRouter = (a, b) => {
-    console.log(`${a} e ${b}`);
     const parsedA = parseInt(a, 10);
     const parsedB = parseInt(b, 10);
     if (sort === 'ASC') return parsedA - parsedB;
