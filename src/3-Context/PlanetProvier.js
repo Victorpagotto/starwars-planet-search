@@ -3,7 +3,16 @@ import propTypes from 'prop-types';
 
 export const PlanetContext = createContext();
 
-function PlanetProvider({ children }) {
+export default function PlanetProvider({ children }) {
+  const filterControl = (filterList) => {
+    const columnList = ['population', 'orbital_period',
+      'diameter', 'rotation_period', 'surface_water'];
+    const selectedFilters = filterList
+      .map((filter) => Object.values(filter)[0]);
+    return columnList.filter((item) => !selectedFilters
+      .some((filter) => filter === item));
+  };
+
   const initialContext = {
     data: [{}],
     filterByName: {
@@ -13,6 +22,7 @@ function PlanetProvider({ children }) {
     columnSelector: 'population',
     comparisonSelector: 'maior que',
     filterByNumericValues: [],
+    showFilter: filterControl([]),
   };
 
   const [context, setContext] = useState(initialContext);
@@ -21,10 +31,15 @@ function PlanetProvider({ children }) {
     setContext({ ...context, [key]: info });
   };
 
-  const filterChange = (newFilterByNumericValues, newColumnSelector) => {
+  const filterChange = (filterByNumericValues) => {
+    const showFilter = filterControl(filterByNumericValues);
+    const columnSelector = showFilter[0]
+      ? showFilter[0]
+      : '';
     setContext({ ...context,
-      filterByNumericValues: newFilterByNumericValues,
-      columnSelector: newColumnSelector });
+      filterByNumericValues,
+      columnSelector,
+      showFilter });
   };
 
   return (
@@ -40,5 +55,3 @@ PlanetProvider.propTypes = {
     propTypes.node,
   ]).isRequired,
 };
-
-export default PlanetProvider;

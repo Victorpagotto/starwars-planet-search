@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { PlanetContext } from '../3-Context/PlanetProvier';
-import TableRow from './tableComponents/tableRow';
+import TableRow from './TableRow';
 
 function Table() {
   const { context } = useContext(PlanetContext);
@@ -26,7 +26,7 @@ function Table() {
         if (planet[name]) {
           return planet[name].includes(value);
         }
-        return true;
+        return false;
       });
     });
     return planetList;
@@ -38,13 +38,15 @@ function Table() {
     filterList.forEach((filter) => {
       const [name, comparison, value] = filter;
       planetList = planetList.filter((planet) => {
+        const planetInfo = parseInt(planet[name], 10);
+        const numValue = parseInt(value, 10);
         switch (comparison) {
         case 'maior que':
-          return (parseInt(planet[name], 10) > parseInt(value, 10));
+          return (planetInfo > numValue);
         case 'menor que':
-          return (parseInt(planet[name], 10) < parseInt(value, 10));
+          return (planetInfo < numValue);
         case 'igual a':
-          return (parseInt(planet[name], 10) === parseInt(value, 10));
+          return (planetInfo === numValue);
         default:
           return true;
         }

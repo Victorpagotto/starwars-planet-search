@@ -4,20 +4,16 @@ import { PlanetContext } from '../3-Context/PlanetProvier';
 
 function Header() {
   const { context, contextChange, filterChange } = useContext(PlanetContext);
-
-  const columnList = ['population', 'orbital_period',
-    'diameter', 'rotation_period', 'surface_water'];
+  const comparisonList = ['maior que', 'menor que', 'igual a'];
 
   const {
     filterByName: { name },
     numericFilter,
     columnSelector,
     comparisonSelector,
-    filterByNumericValues } = context;
+    filterByNumericValues,
+    showFilter } = context;
 
-  const selectedFilters = filterByNumericValues.map((filter) => Object.values(filter)[0]);
-  const filteredColumnList = columnList.filter((item) => !selectedFilters
-    .some((filter) => filter === item));
   useEffect(() => {
     const sendPlanets = async () => {
       const planets = {
@@ -60,7 +56,7 @@ function Header() {
             data-testid="column-filter"
           >
             {
-              filteredColumnList.map((item, i) => (
+              showFilter.map((item, i) => (
                 <option key={ `${item}-${i}` } value={ item }>{ item }</option>
               ))
             }
@@ -73,9 +69,9 @@ function Header() {
             onChange={ sendInfo }
             data-testid="comparison-filter"
           >
-            <option value="maior que">maior que</option>
-            <option value="menor que">menor que</option>
-            <option value="igual a">igual a</option>
+            { comparisonList.map((item, i) => (
+              <option key={ `${item}-${i}` } value={ item }>{ item }</option>
+            )) }
           </select>
         </label>
         <label htmlFor="numericFilter" className="numeric-filter-label">
@@ -90,17 +86,14 @@ function Header() {
         <button
           type="button"
           data-testid="button-filter"
+          disabled={ showFilter.length < 1 }
           onClick={ () => {
-            const columnSelected = columnSelector;
             const filterChanges = [...filterByNumericValues, {
-              column: columnSelected,
+              column: columnSelector,
               comparison: comparisonSelector,
               value: numericFilter,
             }];
-            const selectorChanges = filteredColumnList.length > 1
-              ? filteredColumnList.filter((item) => item !== columnSelected)[0]
-              : '';
-            filterChange(filterChanges, selectorChanges);
+            filterChange(filterChanges);
           } }
         >
           Filtrar
