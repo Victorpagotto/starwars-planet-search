@@ -11,6 +11,7 @@ export default function FilterList() {
         <span>{ `${column} ${comparison}: ${value}` }</span>
         <button
           type="button"
+          data-testid="filter-delete-btn"
           onClick={ () => {
             filterChange(
               filterByNumericValues.filter((item) => item.column !== column),
