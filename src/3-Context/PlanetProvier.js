@@ -24,7 +24,7 @@ export default function PlanetProvider({ children }) {
     showFilter: filterControl([]),
     order: {
       column: 'population',
-      sort: 'ALP',
+      sort: undefined,
     },
   };
 

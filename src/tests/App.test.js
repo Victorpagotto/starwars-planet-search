@@ -8,7 +8,14 @@ describe('Testa a aplicação toda.', () => {
   const starAPIKeys = Object
     .keys(starAPIMock.results[0]).filter((item) => item !== 'residents');
 
-  const starAPINoResidents = starAPIMock.results.map((planet) => (
+  const MOCKAPI = starAPIMock.results.sort((a, b) => {
+    const MINUS = -1;
+    if (a.name > b.name) return 1;
+    if (a.name < b.name) return MINUS;
+    return 0;
+  });
+
+  const starAPINoResidents = MOCKAPI.map((planet) => (
     Object.entries(planet).map((planet) => {
       if (planet[0] !== 'residents') {
         return planet;
@@ -89,30 +96,40 @@ describe('Testa a aplicação toda.', () => {
     userEvent.click(btnFilter);
     const firstList = screen.getAllByTestId('planet-name')
       .map((planet) => planet.innerHTML);
-    const firstFilter = starAPIMock.results
+    const firstFilter = MOCKAPI
       .filter((planet) => parseInt(planet.surface_water) > 40);
-    expect(firstList).toEqual(firstFilter.map((planet) => planet.name));
+    const formatedFirstFilter = firstFilter.map((planet) => planet.name);
+    formatedFirstFilter.forEach((item) => {
+      expect(firstList.includes(item)).toBeTruthy()
+    })
 
     userEvent.clear(valueFilter);
-    userEvent.selectOptions(columnFilter, 'population');
+    userEvent.selectOptions(columnFilter, 'orbital_period');
     userEvent.selectOptions(comparatorFilter, 'menor que');
-    userEvent.type(valueFilter, '1000000000');
+    userEvent.type(valueFilter, '500');
     userEvent.click(btnFilter);
     const secondList = screen.getAllByTestId('planet-name')
       .map((planet) => planet.innerHTML);
     const secondFilter = firstFilter
-      .filter((planet) => parseInt(planet.population) < 1000000000 || planet.population === 'unknown');
-    expect(secondList).toEqual(secondFilter.map((planet) => planet.name));
+      .filter((planet) => parseInt(planet.orbital_period) < 500);
+    const formatedSecondFilter = secondFilter.map((planet) => planet.name);
+    formatedSecondFilter.forEach((item) => {
+      expect(secondList.includes(item)).toBeTruthy()
+    });
 
     userEvent.clear(valueFilter);
-    userEvent.selectOptions(columnFilter, 'orbital_period');
+    userEvent.selectOptions(columnFilter, 'population');
     userEvent.selectOptions(comparatorFilter, 'igual a');
-    userEvent.type(valueFilter, '549');
+    userEvent.type(valueFilter, '1000000000');
     userEvent.click(btnFilter);
     const thirdList = screen.getAllByTestId('planet-name')
     .map((planet) => planet.innerHTML);
     const thirdFilter = secondFilter
-      .filter((planet) => parseInt(planet.orbital_period) === 549);
+      .filter((planet) => parseInt(planet.population) === 1000000000);
+    const formatedthirdFilter = thirdFilter.map((planet) => planet.name);
+    formatedthirdFilter.forEach((item) => {
+      expect(secondList.includes(item)).toBeTruthy()
+    });
     expect(thirdList).toEqual(thirdFilter.map((planet) => planet.name));
 
     userEvent.selectOptions(columnFilter, 'rotation_period');

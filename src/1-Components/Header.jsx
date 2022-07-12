@@ -16,9 +16,10 @@ function Header() {
 
   useEffect(() => {
     const sendPlanets = async () => {
+      const results = await starAPI();
       const planets = {
         key: 'data',
-        info: await starAPI(),
+        info: [...results],
       };
       contextChange(planets);
     };

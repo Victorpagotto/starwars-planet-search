@@ -18,9 +18,9 @@ function Table() {
     for (let i = 0; i < arr.length; i += 1) {
       for (let c = 0; c < arr.length - i - 1; c += 1) {
         if (arrCopy[c][column] === 'unknown') {
-          const aux = arrCopy[c + 1][column];
-          arrCopy[c + 1][column] = arrCopy[c][column];
-          arrCopy[c][column] = aux;
+          const aux = arrCopy[c + 1];
+          arrCopy[c + 1] = arrCopy[c];
+          arrCopy[c] = aux;
         }
       }
     }
@@ -29,16 +29,9 @@ function Table() {
 
   const sortPlanets = (planetList) => {
     let sortedList = [...planetList];
-    sortedList = bubbleDownUnknowns(sortedList);
-    if (sort !== 'ALP') {
+    if (sort) {
+      sortedList = bubbleDownUnknowns(sortedList);
       sortedList = sortedList.sort((a, b) => orderRouter(a[column], b[column]));
-    } else {
-      const MINUS = -1;
-      sortedList = sortedList.sort((a, b) => {
-        if (a.name > b.name) return 1;
-        if (a.name < b.name) return MINUS;
-        return 0;
-      });
     }
     return sortedList;
   };
@@ -81,10 +74,8 @@ function Table() {
           return (planetInfo > numValue);
         case 'menor que':
           return (planetInfo < numValue);
-        case 'igual a':
-          return (planetInfo === numValue);
         default:
-          return true;
+          return (planetInfo === numValue);
         }
       });
     });
