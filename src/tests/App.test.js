@@ -144,6 +144,38 @@ describe('Testa a aplicação toda.', () => {
     expect(screen.getByTestId('column-filter').children.length).toBe(5);
   });
 
+  const testSorter = (chosenList, selectedColumn, selectedOrder) => {
+    const listCopy = [...chosenList.filter((planet) => planet[selectedColumn] !== 'unknown')];
+    const noUnknowns = [...listCopy
+      .sort((a, b) => {
+        if (selectedOrder === 1) {
+          return a[selectedColumn] - b[selectedColumn];
+        }
+        return b[selectedColumn] - a[selectedColumn];
+      })
+      .map((planet) => planet.name)];
+    const unknowns = [...chosenList.filter((planet) => planet[selectedColumn] === 'unknown').map((planet) => planet.name)];
+
+    return {
+      noUnknowns,
+      unknowns,
+    };
+  };
+
+  const comparisonReader = (elements, selectedColumn, selectedOrder) => {
+    const controlElements = testSorter(MOCKAPI, selectedColumn, selectedOrder);
+    const elementNames = elements
+      .filter((element) => element.firstElementChild.innerHTML !== 'name')
+      .map((element) => element.firstElementChild.innerHTML);
+      elementNames.forEach((elementName, i) => {
+        if(i < controlElements.noUnknowns.length) {
+          expect(elementName).toBe(controlElements.noUnknowns[i]);
+        } else {
+          expect(controlElements.unknowns.includes(elementName)).toBeTruthy();
+        }
+    })
+  };
+
   it('Testa a feature de ordenar os planetas.', async () => {
     const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
     global.fetch = jest.fn().mockResolvedValue({
@@ -152,8 +184,10 @@ describe('Testa a aplicação toda.', () => {
     render(<App />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(endpoint));
 
-    const controlSelector = screen.getByRole('table').firstElementChild.children[1].firstElementChild;
-    expect(controlSelector.innerHTML).toBe('Alderaan');
+    const controlSelector = Array.from(screen.getByRole('table').firstElementChild.children)
+      .map((element) => element.firstElementChild.innerHTML)
+      .filter((elementName) => elementName !== 'name');
+    expect(controlSelector).toEqual(MOCKAPI.map((planet) => planet.name));
 
     const columnSort = screen.getByTestId('column-sort');
     const ASCBtn = screen.getByTestId('column-sort-input-asc');
@@ -163,13 +197,19 @@ describe('Testa a aplicação toda.', () => {
     userEvent.selectOptions(columnSort, 'population');
     userEvent.click(ASCBtn);
     userEvent.click(sortBtn);
-    const firstSelector = screen.getByRole('table').firstElementChild.children[1].firstElementChild;
-    expect(firstSelector.innerHTML).toBe('Yavin IV');
+    const firstList = Array.from(screen.getByRole('table').firstElementChild.children);
+    comparisonReader(firstList, 'population', 1);
 
     userEvent.selectOptions(columnSort, 'orbital_period');
     userEvent.click(DESCBtn);
     userEvent.click(sortBtn);
-    const secondSelector = screen.getByRole('table').firstElementChild.children[1].firstElementChild;
-    expect(secondSelector.innerHTML).toBe('Bespin');
+    const secondList = Array.from(screen.getByRole('table').firstElementChild.children);
+    comparisonReader(secondList, 'orbital_period', -1);
+
+    userEvent.selectOptions(columnSort, 'diameter');
+    userEvent.click(ASCBtn);
+    userEvent.click(sortBtn);
+    const thirdList = Array.from(screen.getByRole('table').firstElementChild.children);
+    comparisonReader(thirdList, 'diameter', 1);
   });
 });
