@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import starAPI from '../0-Services/starAPI';
-import { PlanetContext } from '../3-Context/PlanetProvier';
+import { PlanetContext } from '../2-Context/PlanetProvier';
+import '../3-CSS/header.css';
 
 function Header() {
   const { context, contextChange, filterChange } = useContext(PlanetContext);
@@ -34,8 +35,8 @@ function Header() {
   };
 
   return (
-    <div>
-      <div>
+    <div className="header-container">
+      <div className="name-input">
         <input
           type="text"
           value={ name }
@@ -48,8 +49,8 @@ function Header() {
           } }
         />
       </div>
-      <div>
-        <label htmlFor="columnSelector">
+      <div className="selectors-header">
+        <label htmlFor="columnSelector" className="selector-header">
           Coluna
           <select
             id="columnSelector"
@@ -64,7 +65,7 @@ function Header() {
             }
           </select>
         </label>
-        <label htmlFor="comparisonSelector">
+        <label htmlFor="comparisonSelector" className="selector-header">
           Comparador
           <select
             id="comparisonSelector"
@@ -77,7 +78,7 @@ function Header() {
             )) }
           </select>
         </label>
-        <label htmlFor="numericFilter" className="numeric-filter-label">
+        <label htmlFor="numericFilter" className="numeric-value-header">
           Valor
           <input
             id="numericFilter"
@@ -90,6 +91,7 @@ function Header() {
         <button
           type="button"
           data-testid="button-filter"
+          className="filter-button-header"
           disabled={ showFilter.length < 1 }
           onClick={ () => {
             const filterChanges = [...filterByNumericValues, {

@@ -1,0 +1,58 @@
+.order-container {
+  align-items: center;
+  background-color: black;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.order-container label, button {
+  margin: 30px;
+}
+
+.order-selector-container {
+  align-items: center;
+  color: rgb(0, 174, 255);
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 1.2em;
+  justify-content: space-around;
+  padding: 40px 0;
+  width: 60%;
+}
+
+.order-selector-container label {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.order-selector-container select {
+  background-color: black;
+  border: solid 2px rgb(0, 174, 255);
+  color: rgb(0, 174, 255);
+  font-size: 1em;
+  width: 200px;
+}
+
+.order-radio-container label {
+  align-items: center;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  justify-content: flex-end;
+}
+
+.order-button {
+  background-color: black;
+  border: solid 6px rgb(255, 232, 31);
+  color: rgb(255, 232, 31);
+  font-size: 1.1em;
+  height: 60px;
+  width: 150px;
+}
+
+.order-button:hover {
+  background-color: rgb(255, 232, 31);
+  border: solid 3px black;
+  color: black;
+  outline: solid 3px rgb(255, 232, 31);
+}

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { PlanetContext } from '../3-Context/PlanetProvier';
+import { PlanetContext } from '../2-Context/PlanetProvier';
 import TableRow from './TableRow';
+import '../3-CSS/table.css';
 
 function Table() {
   const { context } = useContext(PlanetContext);
@@ -89,26 +90,28 @@ function Table() {
   };
 
   return (
-    <div className="table-container">
-      <table>
-        <tbody>
-          <tr>
+    <div className="table-page-container">
+      <div className="table-outter-container">
+        <table className="table">
+          <div className="table-container">
+            <tr className="table-head-row">
+              {
+                Object.keys(data[0])
+                  .map((item, i) => <th key={ `${item}-${i}` }>{ item }</th>)
+              }
+            </tr>
             {
-              Object.keys(data[0])
-                .map((item, i) => <th key={ `${item}-${i}` }>{ item }</th>)
+              renderFilter()
+                .map((planet, i) => (
+                  <TableRow
+                    key={ `${planet.name}-${i}` }
+                    planetData={ Object.entries(planet) }
+                  />
+                ))
             }
-          </tr>
-          {
-            renderFilter()
-              .map((planet, i) => (
-                <TableRow
-                  key={ `${planet.name}-${i}` }
-                  planetData={ Object.entries(planet) }
-                />
-              ))
-          }
-        </tbody>
-      </table>
+          </div>
+        </table>
+      </div>
     </div>
   );
 }

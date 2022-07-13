@@ -1,10 +1,12 @@
 import React from 'react';
-import { getByTestId, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 import starAPIMock from './starAPIMock';
-import userEvent from '@testing-library/user-event';
 
 describe('Testa a aplicação toda.', () => {
+  const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
+
   const starAPIKeys = Object
     .keys(starAPIMock.results[0]).filter((item) => item !== 'residents');
 
@@ -15,23 +17,23 @@ describe('Testa a aplicação toda.', () => {
     return 0;
   });
 
-  const starAPINoResidents = MOCKAPI.map((planet) => (
-    Object.entries(planet).map((planet) => {
+  const starAPINoResidents = MOCKAPI.map((item) => (
+    Object.entries(item).map((planet) => {
       if (planet[0] !== 'residents') {
         return planet;
       }
-      return undefined
+      return undefined;
     }).filter((planetInfo) => planetInfo)
-    .reduce((acc, planet) => {
-      acc[planet[0]] = planet[1];
-      return acc;
-    }, {})
+      .reduce((acc, planet) => {
+        const [name, value] = planet;
+        acc[name] = value;
+        return acc;
+      }, {})
   ));
 
   it('Testa chamada da API e a tabela.', async () => {
-    const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
     global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(starAPIMock)
+      json: jest.fn().mockResolvedValue(starAPIMock),
     });
     render(<App />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(endpoint));
@@ -48,14 +50,13 @@ describe('Testa a aplicação toda.', () => {
         if (typeof planet[key] === 'string') {
           expect(screen.getAllByText(planet[key]).length > 0).toBeTruthy();
         }
-      })
-  })
+      });
+    });
   });
 
   it('Testa o filtro por nome.', async () => {
-    const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
     global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(starAPIMock)
+      json: jest.fn().mockResolvedValue(starAPIMock),
     });
     render(<App />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(endpoint));
@@ -74,9 +75,8 @@ describe('Testa a aplicação toda.', () => {
   });
 
   it('Testa o filtro numérico.', async () => {
-    const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
     global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(starAPIMock)
+      json: jest.fn().mockResolvedValue(starAPIMock),
     });
     render(<App />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(endpoint));
@@ -97,11 +97,11 @@ describe('Testa a aplicação toda.', () => {
     const firstList = screen.getAllByTestId('planet-name')
       .map((planet) => planet.innerHTML);
     const firstFilter = MOCKAPI
-      .filter((planet) => parseInt(planet.surface_water) > 40);
+      .filter((planet) => parseInt(planet.surface_water, 10) > 40);
     const formatedFirstFilter = firstFilter.map((planet) => planet.name);
     formatedFirstFilter.forEach((item) => {
-      expect(firstList.includes(item)).toBeTruthy()
-    })
+      expect(firstList.includes(item)).toBeTruthy();
+    });
 
     userEvent.clear(valueFilter);
     userEvent.selectOptions(columnFilter, 'orbital_period');
@@ -111,10 +111,10 @@ describe('Testa a aplicação toda.', () => {
     const secondList = screen.getAllByTestId('planet-name')
       .map((planet) => planet.innerHTML);
     const secondFilter = firstFilter
-      .filter((planet) => parseInt(planet.orbital_period) < 500);
+      .filter((planet) => parseInt(planet.orbital_period, 10) < 500);
     const formatedSecondFilter = secondFilter.map((planet) => planet.name);
     formatedSecondFilter.forEach((item) => {
-      expect(secondList.includes(item)).toBeTruthy()
+      expect(secondList.includes(item)).toBeTruthy();
     });
 
     userEvent.clear(valueFilter);
@@ -123,12 +123,12 @@ describe('Testa a aplicação toda.', () => {
     userEvent.type(valueFilter, '1000000000');
     userEvent.click(btnFilter);
     const thirdList = screen.getAllByTestId('planet-name')
-    .map((planet) => planet.innerHTML);
+      .map((planet) => planet.innerHTML);
     const thirdFilter = secondFilter
-      .filter((planet) => parseInt(planet.population) === 1000000000);
+      .filter((planet) => parseInt(planet.population, 10) === 1000000000);
     const formatedthirdFilter = thirdFilter.map((planet) => planet.name);
     formatedthirdFilter.forEach((item) => {
-      expect(secondList.includes(item)).toBeTruthy()
+      expect(secondList.includes(item)).toBeTruthy();
     });
     expect(thirdList).toEqual(thirdFilter.map((planet) => planet.name));
 
@@ -167,19 +167,18 @@ describe('Testa a aplicação toda.', () => {
     const elementNames = elements
       .filter((element) => element.firstElementChild.innerHTML !== 'name')
       .map((element) => element.firstElementChild.innerHTML);
-      elementNames.forEach((elementName, i) => {
-        if(i < controlElements.noUnknowns.length) {
-          expect(elementName).toBe(controlElements.noUnknowns[i]);
-        } else {
-          expect(controlElements.unknowns.includes(elementName)).toBeTruthy();
-        }
-    })
+    elementNames.forEach((elementName, i) => {
+      if (i < controlElements.noUnknowns.length) {
+        expect(elementName).toBe(controlElements.noUnknowns[i]);
+      } else {
+        expect(controlElements.unknowns.includes(elementName)).toBeTruthy();
+      }
+    });
   };
 
   it('Testa a feature de ordenar os planetas.', async () => {
-    const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
     global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(starAPIMock)
+      json: jest.fn().mockResolvedValue(starAPIMock),
     });
     render(<App />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(endpoint));

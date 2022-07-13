@@ -1,15 +1,16 @@
 import React, { useState, useContext } from 'react';
 import columnList from '../0-Services/columnList';
-import { PlanetContext } from '../3-Context/PlanetProvier';
+import { PlanetContext } from '../2-Context/PlanetProvier';
+import '../3-CSS/order.css';
 
 export default function Order() {
   const { context: { order }, contextChange } = useContext(PlanetContext);
   const [localOrder, setLocalOrder] = useState(order);
   const { column, sort } = localOrder;
   return (
-    <div>
-      <div>
-        <label htmlFor="order-selector">
+    <div className="order-container">
+      <div className="order-selector-container">
+        <label htmlFor="order-selector" className="order-selector-column">
           Ordenar por
           <select
             id="order-selector"
@@ -26,7 +27,7 @@ export default function Order() {
             }
           </select>
         </label>
-        <div>
+        <div className="order-radio-container">
           <label htmlFor="Ascendent">
             Ascendente
             <input
@@ -56,19 +57,20 @@ export default function Order() {
             />
           </label>
         </div>
+        <button
+          type="button"
+          data-testid="column-sort-button"
+          className="order-button"
+          onClick={ () => {
+            contextChange({
+              key: 'order',
+              info: localOrder,
+            });
+          } }
+        >
+          Ordenar
+        </button>
       </div>
-      <button
-        type="button"
-        data-testid="column-sort-button"
-        onClick={ () => {
-          contextChange({
-            key: 'order',
-            info: localOrder,
-          });
-        } }
-      >
-        Ordenar
-      </button>
     </div>
   );
 }

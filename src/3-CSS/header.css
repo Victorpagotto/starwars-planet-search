@@ -1,0 +1,105 @@
+.header-container {
+  align-items: center;
+  background-color: black;
+  background-image: url('../pngegg.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.name-input {
+  margin: 40px 0;
+}
+
+.name-input input {
+  background-color: black;
+  border: solid 4px white;
+  border-radius: 10px;
+  color: rgb(0, 174, 255);
+  font-size: 1.2em;
+  outline: solid 2px rgb(255, 232, 31);
+  padding: 10px;
+  text-align: center;
+}
+
+.selectors-header {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.selector-header {
+  background-color: rgb(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: 700;
+  margin: 20px;
+}
+
+.selector-header select {
+  background-color: black;
+  border: solid 2px rgb(0, 174, 255);
+  color: rgb(0, 174, 255);
+  font-size: 1.1em;
+  height: 40px;
+  margin-top: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.selector-header select:focus, .selector-header select:active {
+  border: solid 2px rgb(0, 174, 255);
+  color: rgb(0, 174, 255);
+}
+
+.numeric-value-header {
+  background-color: rgb(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  font-weight: 700;
+  margin: 20px;
+}
+
+.numeric-value-header input {
+  background-color: rgb(255, 255, 255, 0.9);
+  border: solid 2px rgb(0, 174, 255);
+  color: rgb(0, 174, 255);
+  font-size: 1.1em;
+  height: 30px;
+  margin-top: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.filter-button-header {
+  background-color: black;
+  border: solid 6px rgb(255, 232, 31);
+  color: rgb(255, 232, 31);
+  font-size: 1.1em;
+  height: 60px;
+  margin: 20px;
+  margin-right: 50px;
+  width: 100px;
+}
+
+.filter-button-header:hover {
+  background-color: rgb(255, 232, 31);
+  border: solid 3px black;
+  color: black;
+  outline: solid 3px rgb(255, 232, 31);
+}
+
+.filter-button-header:disabled {
+  background-color: rgb(0, 0, 0, 0.6);
+  border: solid 6px rgb(255, 232, 31, 0.6);
+  color: rgb(255, 232, 31, 0.6);
+  outline: none;
+}

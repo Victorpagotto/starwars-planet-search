@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { PlanetContext } from '../3-Context/PlanetProvier';
+import { PlanetContext } from '../2-Context/PlanetProvier';
+import '../3-CSS/filterList.css';
 
 export default function FilterList() {
   const { context: { filterByNumericValues }, filterChange } = useContext(PlanetContext);
@@ -7,7 +8,7 @@ export default function FilterList() {
   const filterMap = filterByNumericValues.map((filter) => {
     const [column, comparison, value] = Object.values(filter);
     return (
-      <div key={ `filter-list-${column}` } data-testid="filter">
+      <div key={ `filter-list-${column}` } data-testid="filter" className="filter-item">
         <span>{ `${column} ${comparison}: ${value}` }</span>
         <button
           type="button"
@@ -25,8 +26,8 @@ export default function FilterList() {
   });
 
   return (
-    <div>
-      <div>
+    <div className="filter-list-container">
+      <div className="filter-list">
         {
           filterMap
         }
@@ -35,6 +36,7 @@ export default function FilterList() {
         <button
           type="button"
           onClick={ () => filterChange([]) }
+          className="filter-delete-button"
           data-testid="button-remove-filters"
           disabled={ filterByNumericValues.length < 1 }
         >

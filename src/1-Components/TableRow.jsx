@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 export default function TableRow({ planetData }) {
   return (
-    <tr className="info-row">
+    <tr className="table-info-row">
       {
         planetData.map((data, i) => {
           if (typeof data[1] === 'string') {
