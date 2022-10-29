@@ -1,4 +1,4 @@
-<h1 align="center">React Tunes</h1>
+<h1 align="center">Starwars Planet Search</h1>
 
 <h2 align="center">Português</h2>
 
